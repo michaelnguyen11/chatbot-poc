@@ -1,9 +1,9 @@
 {
-  "name": "gpt4-langchain-pdf-chatbot",
+  "name": "qa-chatbot-poc",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "author": "Mayooear<twitter:@mayowaoshin>",
+  "author": "Hiep Nguyen",
   "type": "module",
   "scripts": {
     "dev": "next dev",
@@ -44,15 +44,11 @@
     "typescript": "^4.9.5"
   },
   "keywords": [
-    "starter",
-    "gpt4",
+    "chatbot",
+    "openai",
     "pinecone",
     "typescript",
     "nextjs",
-    "langchain",
-    "law",
-    "legal",
-    "pdf",
-    "openai"
+    "langchain"
   ]
 }
