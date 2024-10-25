@@ -30,9 +30,13 @@ export default async function handler(
   try {
     const index = pinecone.Index(PINECONE_INDEX_NAME);
 
+    const embeddings = new OpenAIEmbeddings({
+      modelName: "text-embedding-3-small",
+    });
+
     /* create vectorstore*/
     const vectorStore = await PineconeStore.fromExistingIndex(
-      new OpenAIEmbeddings({}),
+      embeddings,
       {
         pineconeIndex: index,
         textKey: 'text',

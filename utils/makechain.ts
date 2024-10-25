@@ -41,9 +41,9 @@ export const makeChain = (retriever: VectorStoreRetriever) => {
   const answerPrompt = ChatPromptTemplate.fromTemplate(QA_TEMPLATE);
 
   if (!process.env.OPENAI_MODEL_NAME) {
-    console.log('Missing OpenAI model name in .env file, using model name gpt-3.5-turbo by default');
+    console.log('Missing OpenAI model name in .env file, using model name gpt-4o-mini by default');
   }
-  const OPENAI_MODEL_NAME = process.env.OPENAI_MODEL_NAME ?? 'gpt-3.5-turbo';
+  const OPENAI_MODEL_NAME = process.env.OPENAI_MODEL_NAME ?? 'gpt-4o-mini';
 
   const model = new ChatOpenAI({
     temperature: 0, // increase temperature to get more creative answers
