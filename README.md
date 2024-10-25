@@ -4,6 +4,8 @@ Use the OpenAI's API to build a Q&A Chatbot for multiple Large PDF files.
 
 Tech stack used includes LangChain, Pinecone, Typescript, Openai, and Next.js. LangChain is a framework that makes it easier to build scalable AI/LLM apps and chatbots. Pinecone is a vectorstore for storing embeddings and your PDF in text to later retrieve similar docs.
 
+![chatbot-poc-architecture](./visual-guide/chatbot-poc-architecture.png)
+
 
 **If you run into errors, please review the troubleshooting section further down this page.**
 
