@@ -218,12 +218,12 @@ export default function Home() {
                     ref={textAreaRef}
                     autoFocus={false}
                     rows={1}
-                    maxLength={512}
+                    maxLength={4096}
                     id="userInput"
                     name="userInput"
                     placeholder={
                       loading
-                        ? 'Waiting for response...'
+                        ? 'Chờ đợi phản hồi...'
                         : 'Tin nhắn cho Q&A Chatbot'
                     }
                     value={query}
