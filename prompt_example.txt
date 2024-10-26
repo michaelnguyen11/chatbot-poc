@@ -1,1 +1,107 @@
-Write test cases in typescript for the user story : As a user, I want to sign in with email
+User Story: As a Guest I want to have Splash screen so that I can understand that application is launching
+
+Acceptance Criteria:
+1. Splash screen must be launched after 1st launch of application on device
+2. Splash screen must be launched after every launch from background
+3. Splash screen must be displayed while app is launching
+
+========================================================================================================================
+User Story: As a Guest I want to have account in the system so I can sign up using my email
+
+Acceptance Criteria:
+1. Guest should be able to add his valid email
+2. Guest should be able to set his valid password
+3. Guest should be able to confirm added data by clicking on Sign up via email button
+4. As a result - an account should be created.
+5. Verification link should be sent to added email
+6. Confirmation screen should be displayed as a next screen
+7. Confirmation screen should say: Confirmation link has been sent to your email. Please open it and verify your email address.
+8. In case of incorrect credentials Guest should see validation message (see Global validations)
+9. In case of not valid credentials Guest should see validation message (see Global validations)
+
+========================================================================================================================
+User Story: As a Guest I can sign up via Google Account so I can register my account quick
+
+Acceptance Criteria:
+1. Guest can sign up with Google:
+    a. Guest should be able to click on Sign up with Google option
+    b. Google sign up web view should be opened
+    c. Guest is able to choose his Google account to sign up
+    d. As a result - account should be created
+2. If a Guest tries to Sign up in a system via Google, and Google is attached to the same email that is already registered, Guest will enter the same account.
+
+========================================================================================================================
+User Story: As a Guest I can sign up via Facebook
+
+Acceptance Criteria:
+1. Guest can sign up with Facebook account:
+    a. Guest should be able to click on Sign up with Facebook option
+    b. Facebook sign up web view should be opened
+    c. Guest is able to authorize in his Facebook account to sign up
+    d. As a result - account should be created
+2. If a Guest tries to Sign up in a system via Facebook, and his account has linked to the same email that is already registered, Guest will enter the same account.
+
+========================================================================================================================
+User Story: As a Guest I want to be sure that my email is correct so I can verify it
+
+Acceptance Criteria:
+1. Guest should be able to resend verification link.
+2. After resending:
+    a. the message he should see the statement: "Verification link has been sent"
+    b. New verification link should be sent to registered email
+    c. Previous link should become invalid
+3. Guest has only 1 attempt per 24 to resend the verification link.
+4. In case there are no more attempts for today he should see a message: "You reached out of attempts to resend the verification link. Please try again in 30 sec."
+
+========================================================================================================================
+User Story: As a Guest I want to read Privacy Policy so I can open it
+
+Acceptance Criteria:
+1. Guest should be able to see the text of Privacy policy
+2. Guest should be able to scroll the text
+3. Guest should be able to go back to previous screen
+
+========================================================================================================================
+User Story: As a User I can sign in with email
+
+Acceptance Criteria:
+1. User should be able to enter his valid email
+2. User should be able to enter his valid password
+3. User should be able to confirm added data by clicking on Sign in via email button
+4. As a result - User should be signed in
+5. In case of incorrect credentials User should see validation message (see Global validations)
+6. In case of not valid credentials User should see validation message (see Global validations)
+
+========================================================================================================================
+User Story: As a User I can sign in via Google
+
+Acceptance Criteria:
+1. User can sign in with Google:
+    a. User should be able to click on Sign in with Google option
+    b. Google sign in web view should be opened
+    c. User is able to choose his Google account to sign in
+    d. As a result - User should be signed in
+2. If the User tries to Sign in into the system via Google, and Google is attached to the same email that is already registered, User will enter the same account.
+3. In case if no such account created User should see validation error (See Global validation section)
+
+========================================================================================================================
+User Story: As a User I can sign in via Facebook
+
+Acceptance Criteria:
+1. User can sign in with Facebook account:
+    a. User should be able to click on Sign in with Facebook option
+    b. Facebook sign in web view should be opened
+    c. User is able to authorize in his Facebook account to sign in
+    d. As a result - User should be signed in
+2. If a User tries to Sign in in a system via Facebook, and his account has linked to the same email that is already registered, User will enter the same account.
+3. In case if no such account created User should see validation error (See Global validation section)
+
+========================================================================================================================
+User Story: As a User I can sign in via Apple ID
+
+Acceptance Criteria:
+1. User can sign in with Apple ID:
+    a. User should be able to click on Sign in with Apple ID option
+    b. Apple ID view should be opened
+    c. If a User tries to Sign in into a system via Apple ID, and his account has linked to the same email that is already registered, Guest will enter the same account
+2. In case if no such account created User should see validation error (See Global validation section)

@@ -1,91 +1,68 @@
+// makeChain.ts
+
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { ChatPromptTemplate } from 'langchain/prompts';
-import { RunnableSequence } from 'langchain/schema/runnable';
-import { StringOutputParser } from 'langchain/schema/output_parser';
-import type { Document } from 'langchain/document';
+import {
+  ChatPromptTemplate,
+  SystemMessagePromptTemplate,
+  HumanMessagePromptTemplate,
+} from 'langchain/prompts';
+import { LLMChain } from 'langchain/chains';
 import type { VectorStoreRetriever } from 'langchain/vectorstores/base';
+import type { Document } from 'langchain/document';
+import { ConsoleCallbackHandler } from 'langchain/callbacks';
 
-const CONDENSE_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
-
-<chat_history>
-  {chat_history}
-</chat_history>
-
-Follow Up Input: {question}
-Standalone question:`;
-
-const QA_TEMPLATE = `Your task is to create Typescript test cases based on the provided natural language requests.
-The requests will describe the desired user story requirements, including user story names, detail description with preconditions, acceptance criteria, notes and implementation nodes.
-Implement the test cases according to the given specifications, ensuring that they handle edge cases, perform necessary validations, and follow best practices for Typescript programming.
-Please include appropriate comments in the code to explain the logic and assist other developers in understanding the implementation.
-
-<context>
-  {context}
-</context>
-
-<chat_history>
-  {chat_history}
-</chat_history>
-
-Question: {question}
-Helpful answer in markdown:`;
-
+// Function to combine retrieved documents into a single context string
 const combineDocumentsFn = (docs: Document[], separator = '\n\n') => {
   const serializedDocs = docs.map((doc) => doc.pageContent);
   return serializedDocs.join(separator);
 };
 
 export const makeChain = (retriever: VectorStoreRetriever) => {
-  const condenseQuestionPrompt =
-    ChatPromptTemplate.fromTemplate(CONDENSE_TEMPLATE);
-  const answerPrompt = ChatPromptTemplate.fromTemplate(QA_TEMPLATE);
+  const promptTemplate = ChatPromptTemplate.fromPromptMessages([
+    SystemMessagePromptTemplate.fromTemplate(
+      "You are an experienced Quality Assurance expert with expertise in defining comprehensive test cases from user stories and acceptance criteria. You have a deep understanding of software testing methodologies and best practices."
+    ),
+    HumanMessagePromptTemplate.fromTemplate(
+      `Based on the following user story and acceptance criteria, please generate a detailed list of test cases that thoroughly cover all functional and non-functional requirements.
 
-  if (!process.env.OPENAI_MODEL_NAME) {
-    console.log('Missing OpenAI model name in .env file, using model name gpt-4o-mini by default');
-  }
-  const OPENAI_MODEL_NAME = process.env.OPENAI_MODEL_NAME ?? 'gpt-4o-mini';
+User Story:
+{user_story}
+
+Acceptance Criteria:
+{acceptance_criteria}
+
+For each test case, include the following:
+1. **Test Case ID**: To easily identify and distinguish test cases from each other.
+2. **Test Summary**: To briefly describe the case to be tested. Also known as test objective.
+3. **Test Precondition**: Prerequisite, necessary condition for this test case to run.
+4. **Test Steps**: Steps to execute the test case.
+5. **Expected Result**: Expected result, what you want the program to do.
+
+Ensure that your test cases are clear, concise, and cover edge cases and exception handling where appropriate.
+Format your response in a structured and organized manner for easy readability.
+
+Additional Context:
+{context}
+
+Consider any previous interactions:
+{chat_history}
+`
+    ),
+  ]);
 
   const model = new ChatOpenAI({
-    temperature: 0, // increase temperature to get more creative answers
-    modelName: OPENAI_MODEL_NAME, //change this to gpt-4 if you have access
+    temperature: 0,
+    modelName: process.env.OPENAI_MODEL_NAME ?? 'gpt-4',
+    openAIApiKey: process.env.OPENAI_API_KEY,
   });
 
-  // Rephrase the initial question into a dereferenced standalone question based on
-  // the chat history to allow effective vectorstore querying.
-  const standaloneQuestionChain = RunnableSequence.from([
-    condenseQuestionPrompt,
-    model,
-    new StringOutputParser(),
-  ]);
+  // Create the chain with the prompt template and model
+  const chain = new LLMChain({
+    llm: model,
+    prompt: promptTemplate,
+    // verbose: true,
+    // callbacks: [new ConsoleCallbackHandler()], // For logging
+  });
 
-  // Retrieve documents based on a query, then format them.
-  const retrievalChain = retriever.pipe(combineDocumentsFn);
-
-  // Generate an answer to the standalone question based on the chat history
-  // and retrieved documents. Additionally, we return the source documents directly.
-  const answerChain = RunnableSequence.from([
-    {
-      context: RunnableSequence.from([
-        (input) => input.question,
-        retrievalChain,
-      ]),
-      chat_history: (input) => input.chat_history,
-      question: (input) => input.question,
-    },
-    answerPrompt,
-    model,
-    new StringOutputParser(),
-  ]);
-
-  // First generate a standalone question, then answer it based on
-  // chat history and retrieved context documents.
-  const conversationalRetrievalQAChain = RunnableSequence.from([
-    {
-      question: standaloneQuestionChain,
-      chat_history: (input) => input.chat_history,
-    },
-    answerChain,
-  ]);
-
-  return conversationalRetrievalQAChain;
+  return chain;
 };
